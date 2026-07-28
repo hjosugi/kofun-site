@@ -4,7 +4,7 @@ This directory contains **13,500 discrete implementation issues**.
 Each area has 25 concrete subjects. Each subject has a 20-step lifecycle from requirements to release acceptance.
 Every row has a stable ID, priority, milestone, acceptance criterion, validation method, dependency, and content fingerprint.
 
-The generated backlog is intentionally broader than the bootstrap implementation. `docs/MVP_IMPLEMENTED.md` records what currently works.
+The generated backlog is intentionally broader than the bootstrap implementation. [`docs/MVP_IMPLEMENTED.md`](https://github.com/hjosugi/kofun/blob/main/docs/MVP_IMPLEMENTED.md) in the language repository records what currently works.
 
 ## Counts
 
@@ -48,11 +48,21 @@ The generated backlog is intentionally broader than the bootstrap implementation
 | [issues-26-quality.md](issues-26-quality.md) | Testing Security and Performance | 500 | KOFUN-12501–KOFUN-13000 |
 | [issues-27-ecosystem.md](issues-27-ecosystem.md) | Governance Ecosystem and Adoption | 500 | KOFUN-13001–KOFUN-13500 |
 
-## Generation and verification
+## Verification
 
-```bash
-python3 scripts/generate_backlog.py
-python3 scripts/verify_backlog.py
+The verifier is a Kofun program, so it runs on the compiler built from the
+language submodule:
+
+```sh
+git submodule update --init
+kofun/bin/kofun run scripts/verify_backlog.kofun
 ```
 
-Do not edit generated area files manually. Change the generator, regenerate, and review the diff.
+It is meant to check all 27 area files for 500 contiguous, well-formed issue
+rows each, 13,500 in total, and to cross-check `summary.json`.
+
+It does not currently run: the Core rejects `chars` and the other Text builtins
+the script was written against. That was already true before this directory
+moved out of the language repository, where no gate invoked it either.
+
+Do not edit generated area files manually.

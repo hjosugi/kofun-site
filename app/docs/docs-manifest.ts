@@ -1,5 +1,16 @@
 import statusSnapshot from "./status-snapshot.json" with { type: "json" };
 
+// Every rendered document is language-repository source, checked out here as a
+// submodule. `source` stays repository-relative so the GitHub blob links keep
+// naming the file where it is authored and reviewed; only the on-disk read is
+// prefixed. Callers must use `sourceFile` rather than joining `source` against
+// this repository's root.
+export const KOFUN_ROOT = "kofun";
+
+export function sourceFile(source: string): string {
+  return `${KOFUN_ROOT}/${source}`;
+}
+
 export type DocEntry = {
   slug: string;
   title: string;

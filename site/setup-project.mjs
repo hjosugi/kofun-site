@@ -9,6 +9,11 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, "..");
 const defaultConfigPath = path.join(scriptDirectory, "project-config.json");
+// The Project belongs to the language repository, which this site checks out as
+// a submodule. The remote-write guard has to interrogate that checkout and not
+// this one: proving kofun-site is kofun-site would prove nothing about which
+// repository's Project the apply lane is about to write to.
+const languageRepositoryRoot = path.join(repositoryRoot, "kofun");
 
 const PROJECT_QUERY = `
   query ProjectByTitle($owner: String!) {
@@ -319,7 +324,9 @@ export function validateConfig(config) {
   }
   // Planning is managed on the Project board rather than on the public site, so
   // the board's own README has to carry the route back to the source of truth.
-  if (!String(config.project?.readme ?? "").includes("/docs/DELIVERY_PLAN.md")) {
+  if (
+    !String(config.project?.readme ?? "").includes("/content/DELIVERY_PLAN.md")
+  ) {
     fail("Project README must link the generated delivery plan");
   }
   const fields = arrayValue(config.project?.fields);
@@ -727,9 +734,13 @@ export function tokenGuidance({ apply, actions, projectsTokenConfigured }) {
   };
 }
 
-function runCommand(command, args, { input, allowFailure = false } = {}) {
+function runCommand(
+  command,
+  args,
+  { input, allowFailure = false, cwd = repositoryRoot } = {},
+) {
   const result = spawnSync(command, args, {
-    cwd: repositoryRoot,
+    cwd,
     encoding: "utf8",
     input,
     env: process.env,
@@ -783,7 +794,9 @@ export function verifyRepositoryRemote(expected, remote) {
 }
 
 function getOrigin() {
-  const result = runCommand("git", ["remote", "get-url", "origin"]);
+  const result = runCommand("git", ["remote", "get-url", "origin"], {
+    cwd: languageRepositoryRoot,
+  });
   return result.stdout.trim();
 }
 

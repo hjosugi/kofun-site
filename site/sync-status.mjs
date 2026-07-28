@@ -20,7 +20,7 @@ const snapshotPath = new URL(
   "../app/docs/status-snapshot.json",
   import.meta.url,
 );
-const markdownPath = new URL("../docs/ISSUE_PROGRESS.md", import.meta.url);
+const markdownPath = new URL("../content/ISSUE_PROGRESS.md", import.meta.url);
 
 const headers = {
   Accept: "application/vnd.github+json",

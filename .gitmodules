@@ -1,0 +1,4 @@
+[submodule "kofun"]
+	path = kofun
+	url = https://github.com/hjosugi/kofun.git
+	branch = main

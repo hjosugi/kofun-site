@@ -7,7 +7,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import DocsNav from "../docs-nav";
-import { docBySlug, docBySource, docs } from "../docs-manifest";
+import { docBySlug, docBySource, docs, sourceFile } from "../docs-manifest";
 
 const githubBlob = "https://github.com/hjosugi/kofun/blob/main";
 const githubRaw = "https://raw.githubusercontent.com/hjosugi/kofun/main";
@@ -64,7 +64,7 @@ export default async function DocPage({
   const next = entryIndex < docs.length - 1 ? docs[entryIndex + 1] : undefined;
 
   const markdown = await readFile(
-    posix.join(process.cwd(), entry.source),
+    posix.join(process.cwd(), sourceFile(entry.source)),
     "utf8",
   );
 

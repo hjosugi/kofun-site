@@ -41,7 +41,10 @@ const DEFAULT_SNAPSHOT_PATH = new URL(
   "../site/plan-snapshot.json",
   import.meta.url,
 );
-const DEFAULT_MARKDOWN_PATH = new URL("../docs/DELIVERY_PLAN.md", import.meta.url);
+const DEFAULT_MARKDOWN_PATH = new URL(
+  "../content/DELIVERY_PLAN.md",
+  import.meta.url,
+);
 const DAY_MS = 24 * 60 * 60 * 1000;
 const PRIORITY_RANK = new Map([
   ["P0", 0],

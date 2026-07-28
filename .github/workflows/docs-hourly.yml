@@ -11,14 +11,19 @@ on:
         default: false
         type: boolean
 
+# `contents: write` pushes the regenerated snapshots to this repository's main.
+# GitHub Pages belongs to the language repository, not to this one, so the Pages
+# lane authenticates with SITE_PUBLISH_TOKEN instead of a `pages` permission.
 permissions:
   actions: read
   contents: write
-  pages: write
 
 concurrency:
   group: hourly-docs-monitor
   cancel-in-progress: false
+
+env:
+  LANGUAGE_REPOSITORY: hjosugi/kofun
 
 jobs:
   synchronize:
@@ -27,11 +32,16 @@ jobs:
       publish: ${{ steps.sync.outputs.publish }}
       tracker_changed: ${{ steps.sync.outputs.tracker_changed }}
     steps:
-      - name: Check out documentation source
+      - name: Check out the site and its language submodule
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           ref: main
+          submodules: true
+      - name: Advance the language submodule to its main
+        run: |
+          git submodule update --remote --checkout kofun
+          git -C kofun log --oneline -1
       - name: Set up Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -48,31 +58,45 @@ jobs:
         run: |
           npm run sync:status
           npm run sync:plan
-          git fetch origin gh-pages
+          git -C kofun fetch origin gh-pages
 
+          # The submodule pointer is tracked state: a new language commit
+          # changes what the site renders even when no snapshot moved.
           tracker_changed=false
           if ! git diff --quiet -- \
               app/docs/status-snapshot.json \
               site/plan-snapshot.json \
-              docs/DELIVERY_PLAN.md \
-              docs/ISSUE_PROGRESS.md
+              content/DELIVERY_PLAN.md \
+              content/ISSUE_PROGRESS.md \
+              kofun
           then
             tracker_changed=true
           fi
 
-          source_commit=$(git rev-parse HEAD)
+          # `.kofun-source-commit` keeps its meaning: the language commit whose
+          # documentation the published tree was built from. The site's own
+          # commit is recorded beside it, because the renderer now versions
+          # separately from the documents it renders.
+          source_commit=$(git -C kofun rev-parse HEAD)
+          site_commit=$(git rev-parse HEAD)
           published_commit=$(
-            git show origin/gh-pages:.kofun-source-commit 2>/dev/null || true
+            git -C kofun show origin/gh-pages:.kofun-source-commit \
+              2>/dev/null || true
           )
-          branch_commit=$(git rev-parse origin/gh-pages)
+          published_site_commit=$(
+            git -C kofun show origin/gh-pages:.kofun-site-commit \
+              2>/dev/null || true
+          )
+          branch_commit=$(git -C kofun rev-parse origin/gh-pages)
           deployed_commit=$(
-            gh api "repos/${GITHUB_REPOSITORY}/pages/builds/latest" \
+            gh api "repos/${LANGUAGE_REPOSITORY}/pages/builds/latest" \
               --jq .commit 2>/dev/null || true
           )
           publish=false
           if [ "$tracker_changed" = true ] ||
              [ "$FORCE_PUBLISH" = true ] ||
              [ "$published_commit" != "$source_commit" ] ||
+             [ "$published_site_commit" != "$site_commit" ] ||
              [ "$deployed_commit" != "$branch_commit" ]
           then
             publish=true
@@ -83,8 +107,10 @@ jobs:
           {
             echo "Tracker changed: $tracker_changed"
             echo "Publish required: $publish"
-            echo "Source commit: $source_commit"
-            echo "Published source: ${published_commit:-none}"
+            echo "Language commit: $source_commit"
+            echo "Site commit: $site_commit"
+            echo "Published language source: ${published_commit:-none}"
+            echo "Published site source: ${published_site_commit:-none}"
             echo "Pages branch: $branch_commit"
             echo "Deployed Pages commit: ${deployed_commit:-none}"
           } >> "$GITHUB_STEP_SUMMARY"
@@ -102,25 +128,42 @@ jobs:
           git add \
             app/docs/status-snapshot.json \
             site/plan-snapshot.json \
-            docs/DELIVERY_PLAN.md \
-            docs/ISSUE_PROGRESS.md
+            content/DELIVERY_PLAN.md \
+            content/ISSUE_PROGRESS.md \
+            kofun
           git commit -m "Update delivery planning snapshots"
           git push origin HEAD:main
       - name: Publish changed Pages tree
         if: steps.sync.outputs.publish == 'true'
         id: publish
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.SITE_PUBLISH_TOKEN }}
+          SITE_PUBLISH_TOKEN: ${{ secrets.SITE_PUBLISH_TOKEN }}
         run: |
-          source_commit=$(git rev-parse HEAD)
+          # Pages still serves https://hjosugi.github.io/kofun/ from the
+          # language repository's gh-pages branch, so publishing is a
+          # cross-repository write and needs a PAT with contents write on
+          # ${LANGUAGE_REPOSITORY}. Fail loudly rather than publish nothing.
+          if [ -z "${SITE_PUBLISH_TOKEN:-}" ]
+          then
+            echo "SITE_PUBLISH_TOKEN is not configured; cannot publish" >&2
+            exit 1
+          fi
+          git -C kofun remote set-url origin \
+            "https://x-access-token:${SITE_PUBLISH_TOKEN}@github.com/${LANGUAGE_REPOSITORY}.git"
+
+          source_commit=$(git -C kofun rev-parse HEAD)
+          site_commit=$(git rev-parse HEAD)
           publish_dir="$RUNNER_TEMP/kofun-gh-pages"
-          git fetch origin gh-pages
-          git worktree add --detach "$publish_dir" origin/gh-pages
+          git -C kofun fetch origin gh-pages
+          git -C kofun worktree add --detach "$publish_dir" origin/gh-pages
           find "$publish_dir" -mindepth 1 -maxdepth 1 \
             ! -name .git -exec rm -rf -- {} +
           cp -a out/. "$publish_dir"/
           printf '%s\n' "$source_commit" \
             > "$publish_dir/.kofun-source-commit"
+          printf '%s\n' "$site_commit" \
+            > "$publish_dir/.kofun-site-commit"
           git -C "$publish_dir" config user.name "github-actions[bot]"
           git -C "$publish_dir" config user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
@@ -134,21 +177,21 @@ jobs:
           publish_commit=$(git -C "$publish_dir" rev-parse HEAD)
           echo "commit=$publish_commit" >> "$GITHUB_OUTPUT"
           gh api --method POST \
-            "repos/${GITHUB_REPOSITORY}/pages/builds" >/dev/null
+            "repos/${LANGUAGE_REPOSITORY}/pages/builds" >/dev/null
       - name: Wait for changed Pages deployment
         if: steps.sync.outputs.publish == 'true'
         env:
           EXPECTED_COMMIT: ${{ steps.publish.outputs.commit }}
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.SITE_PUBLISH_TOKEN }}
         run: |
           for attempt in $(seq 1 60)
           do
             status=$(
-              gh api "repos/${GITHUB_REPOSITORY}/pages/builds/latest" \
+              gh api "repos/${LANGUAGE_REPOSITORY}/pages/builds/latest" \
                 --jq .status
             )
             commit=$(
-              gh api "repos/${GITHUB_REPOSITORY}/pages/builds/latest" \
+              gh api "repos/${LANGUAGE_REPOSITORY}/pages/builds/latest" \
                 --jq .commit
             )
             echo "$commit $status"

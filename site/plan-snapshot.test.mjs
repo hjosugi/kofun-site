@@ -224,7 +224,7 @@ assert.deepEqual(parseArgs(["--check", "--as-of", "2026-07-26"]), {
   asOf: "2026-07-26",
   input: null,
   output: new URL("../site/plan-snapshot.json", import.meta.url).pathname,
-  markdown: new URL("../docs/DELIVERY_PLAN.md", import.meta.url).pathname,
+  markdown: new URL("../content/DELIVERY_PLAN.md", import.meta.url).pathname,
 });
 
 const apiItems = Array.from({ length: 101 }, (_, index) => issue(index + 1000));

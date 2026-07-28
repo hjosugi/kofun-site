@@ -25,8 +25,13 @@ jobs:
   synchronize:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the exact repository
+      # The language submodule is not optional here: the remote-write guard in
+      # setup-project.mjs proves the Project it is about to write to belongs to
+      # the checked-out language repository, and it reads that checkout's origin.
+      - name: Check out the exact repository and its language submodule
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
       - name: Set up Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:

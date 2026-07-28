@@ -1,0 +1,18 @@
+# Build output
+node_modules/
+.next/
+.open-next/
+out/
+
+# public/tour/ is copied out of the language submodule by site/prepare-tour.mjs
+# on every build. Committing it would create a second copy of source that the
+# language repository gates byte for byte.
+public/tour/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store

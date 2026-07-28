@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
-import { docs } from "../app/docs/docs-manifest.ts";
+import { docs, sourceFile } from "../app/docs/docs-manifest.ts";
 
 const markdownLink = /!?\[[^\]]*]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/g;
 
 for (const entry of docs) {
-  const sourcePath = path.resolve(entry.source);
+  const sourcePath = path.resolve(sourceFile(entry.source));
   await access(sourcePath);
   const source = await readFile(sourcePath, "utf8");
   const prose = source
