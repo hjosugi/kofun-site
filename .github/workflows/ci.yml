@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Site verification
+    runs-on: ubuntu-latest
+    steps:
+      # The submodule is not optional: every document this site renders is read
+      # from it, and `npm run test:tour` runs the language repository's own tour
+      # gate inside it.
+      - uses: actions/checkout@v6
+        with:
+          submodules: true
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - name: Verify the site and its exact Pages export
+        env:
+          KOFUN_BASE_PATH: /kofun
+        run: npm run verify:pages
+
+  # The site names its sources by path. A rename or deletion on the language
+  # repository's main breaks rendering, and the hourly job advances the
+  # submodule unattended, so this lane checks against main rather than against
+  # the pinned commit. It is allowed to fail without blocking a pull request:
+  # what it reports is drift in another repository, not a defect in this change.
+  drift:
+    name: Manifest drift against language main
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: true
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - name: Advance the submodule to language main
+        run: |
+          git submodule update --remote --checkout kofun
+          git -C kofun log --oneline -1
+      - name: Every manifest source must still resolve
+        run: npm run test:docs
