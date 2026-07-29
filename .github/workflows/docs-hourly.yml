@@ -13,7 +13,7 @@ on:
 
 # `contents: write` pushes the regenerated snapshots to this repository's main.
 # GitHub Pages belongs to the language repository, not to this one, so the Pages
-# lane authenticates with SITE_PUBLISH_TOKEN instead of a `pages` permission.
+# lane authenticates with a deploy key instead of a `pages` permission.
 permissions:
   actions: read
   contents: write
@@ -88,16 +88,15 @@ jobs:
               2>/dev/null || true
           )
           branch_commit=$(git -C kofun rev-parse origin/gh-pages)
-          deployed_commit=$(
-            gh api "repos/${LANGUAGE_REPOSITORY}/pages/builds/latest" \
-              --jq .commit 2>/dev/null || true
-          )
+          # The Pages REST API is not consulted. It 404s for anything without
+          # push access on the language repository, which would put a token
+          # requirement on a decision that the gh-pages branch already answers:
+          # what is committed there is what Pages serves.
           publish=false
           if [ "$tracker_changed" = true ] ||
              [ "$FORCE_PUBLISH" = true ] ||
              [ "$published_commit" != "$source_commit" ] ||
-             [ "$published_site_commit" != "$site_commit" ] ||
-             [ "$deployed_commit" != "$branch_commit" ]
+             [ "$published_site_commit" != "$site_commit" ]
           then
             publish=true
           fi
@@ -112,7 +111,6 @@ jobs:
             echo "Published language source: ${published_commit:-none}"
             echo "Published site source: ${published_site_commit:-none}"
             echo "Pages branch: $branch_commit"
-            echo "Deployed Pages commit: ${deployed_commit:-none}"
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Verify changed documentation and Pages export
         if: steps.sync.outputs.publish == 'true'
@@ -133,25 +131,34 @@ jobs:
             kofun
           git commit -m "Update delivery planning snapshots"
           git push origin HEAD:main
+      # Pages serves https://hjosugi.github.io/kofun/ from the language
+      # repository's gh-pages branch, so publishing is a cross-repository write.
+      # It authenticates with a deploy key rather than a personal access token:
+      # the key grants write to exactly one repository and nothing else, where a
+      # PAT would carry its holder's whole account into this repository's
+      # secrets.
+      - name: Authorize the cross-repository publish
+        if: steps.sync.outputs.publish == 'true'
+        env:
+          SITE_PUBLISH_KEY: ${{ secrets.SITE_PUBLISH_KEY }}
+        run: |
+          if [ -z "${SITE_PUBLISH_KEY:-}" ]
+          then
+            echo "SITE_PUBLISH_KEY is not configured; cannot publish" >&2
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SITE_PUBLISH_KEY" > ~/.ssh/publish_key
+          chmod 600 ~/.ssh/publish_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+          git -C kofun remote set-url origin \
+            "git@github.com:${LANGUAGE_REPOSITORY}.git"
       - name: Publish changed Pages tree
         if: steps.sync.outputs.publish == 'true'
         id: publish
         env:
-          GH_TOKEN: ${{ secrets.SITE_PUBLISH_TOKEN }}
-          SITE_PUBLISH_TOKEN: ${{ secrets.SITE_PUBLISH_TOKEN }}
+          GIT_SSH_COMMAND: ssh -i ~/.ssh/publish_key -o IdentitiesOnly=yes
         run: |
-          # Pages still serves https://hjosugi.github.io/kofun/ from the
-          # language repository's gh-pages branch, so publishing is a
-          # cross-repository write and needs a PAT with contents write on
-          # ${LANGUAGE_REPOSITORY}. Fail loudly rather than publish nothing.
-          if [ -z "${SITE_PUBLISH_TOKEN:-}" ]
-          then
-            echo "SITE_PUBLISH_TOKEN is not configured; cannot publish" >&2
-            exit 1
-          fi
-          git -C kofun remote set-url origin \
-            "https://x-access-token:${SITE_PUBLISH_TOKEN}@github.com/${LANGUAGE_REPOSITORY}.git"
-
           source_commit=$(git -C kofun rev-parse HEAD)
           site_commit=$(git rev-parse HEAD)
           publish_dir="$RUNNER_TEMP/kofun-gh-pages"
@@ -174,38 +181,29 @@ jobs:
               -m "Publish site from ${source_commit:0:7}"
             git -C "$publish_dir" push origin HEAD:gh-pages
           fi
-          publish_commit=$(git -C "$publish_dir" rev-parse HEAD)
-          echo "commit=$publish_commit" >> "$GITHUB_OUTPUT"
-          gh api --method POST \
-            "repos/${LANGUAGE_REPOSITORY}/pages/builds" >/dev/null
-      - name: Wait for changed Pages deployment
+          echo "site_commit=$site_commit" >> "$GITHUB_OUTPUT"
+          # Pushing gh-pages triggers the Pages build on its own; the explicit
+          # POST that used to be here only added a second concurrent build for
+          # the same commit, and one of the pair would be cancelled.
+      - name: Wait for the published site to serve the new commit
         if: steps.sync.outputs.publish == 'true'
         env:
-          EXPECTED_COMMIT: ${{ steps.publish.outputs.commit }}
-          GH_TOKEN: ${{ secrets.SITE_PUBLISH_TOKEN }}
+          EXPECTED_SITE_COMMIT: ${{ steps.publish.outputs.site_commit }}
         run: |
+          # This waits on what a reader actually gets rather than on what the
+          # Pages API reports, which has the side benefit of needing no
+          # credentials at all. `.kofun-site-commit` is written beside the
+          # export, so serving it proves the new tree is live.
+          marker="https://hjosugi.github.io/kofun/.kofun-site-commit"
           for attempt in $(seq 1 60)
           do
-            status=$(
-              gh api "repos/${LANGUAGE_REPOSITORY}/pages/builds/latest" \
-                --jq .status
-            )
-            commit=$(
-              gh api "repos/${LANGUAGE_REPOSITORY}/pages/builds/latest" \
-                --jq .commit
-            )
-            echo "$commit $status"
-            if [ "$commit" = "$EXPECTED_COMMIT" ] &&
-               [ "$status" = built ]
+            served=$(curl --fail --silent "$marker" 2>/dev/null | tr -d '\r\n' || true)
+            echo "serving: ${served:-none}"
+            if [ "$served" = "$EXPECTED_SITE_COMMIT" ]
             then
               exit 0
             fi
-            if [ "$commit" = "$EXPECTED_COMMIT" ] &&
-               [ "$status" = errored ]
-            then
-              exit 1
-            fi
-            sleep 5
+            sleep 10
           done
           echo "Timed out waiting for Pages build" >&2
           exit 1
