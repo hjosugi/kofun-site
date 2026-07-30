@@ -14,7 +14,7 @@ carries no npm, Next.js, React, Cloudflare, or TypeScript toolchain, and its
 |---|---|
 | `app/` | Next.js App Router: landing page, `/docs` renderer, playground |
 | `site/` | build, synchronization, and export scripts with their tests |
-| `content/` | generated planning documents (`DELIVERY_PLAN.md`, `ISSUE_PROGRESS.md`) |
+| `content/` | documents this repository owns: the generated planning snapshots (`DELIVERY_PLAN.md`, `ISSUE_PROGRESS.md`) and the narrative documents no language gate resolves |
 | `backlog/` | the 13,500-issue long-range catalogue, 500 per area across 27 areas |
 | `scripts/verify_backlog.kofun` | the catalogue's verifier, written in Kofun |
 | `kofun/` | submodule: the language repository, source of every rendered document |
@@ -36,6 +36,21 @@ Two consequences worth stating plainly:
   submodule's origin, not this repository's. Proving kofun-site is kofun-site
   would prove nothing about which repository's Project an apply is about to
   write to.
+
+## The narrative documents
+
+`content/ISSUE_TRIAGE.md`, `content/ONE_DAY_TUTORIAL.md`,
+`content/CODING_INTERVIEW.md` and `content/SCIENTIFIC_COMPUTING.md` came from the
+language repository's `docs/`, where nothing resolved them: not
+`release/claims.json`, not `rfcs/index.json`, not the release-evidence pack, not
+a gate script, and not this site's own manifest. The rest of `docs/` stays there
+and is read from the submodule, for the reason `kofun/docs/REPOSITORY_GUIDE.md`
+records.
+
+They are not in `app/docs/docs-manifest.ts`, because they were not rendered
+before the move either — publishing them is a separate decision from housing
+them. Their links into the language repository are absolute URLs, since the
+files they name are now in another repository.
 
 ## Getting started
 
