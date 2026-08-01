@@ -11,9 +11,9 @@ jobs:
     name: Site verification
     runs-on: ubuntu-latest
     steps:
-      # The submodule is not optional: every document this site renders is read
+      # The submodule is not optional: language-reference documents are read
       # from it, and `npm run test:tour` runs the language repository's own tour
-      # gate inside it.
+      # gate inside it. Site-owned guides remain in this checkout.
       - uses: actions/checkout@v6
         with:
           submodules: true

@@ -129,8 +129,9 @@ export default function DocsHome() {
               <div>
                 <h2>Curated guides</h2>
                 <p>
-                  Authoritative repository Markdown, rendered with status
-                  qualifiers and local links preserved.
+                  Authoritative Markdown from the language and site
+                  repositories, rendered with source ownership, status
+                  qualifiers, and local links preserved.
                 </p>
               </div>
             </div>

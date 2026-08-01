@@ -4,6 +4,11 @@
 
 The goal of the Kofun interview profile is to let you concentrate on explaining the algorithm rather than on language ceremony.
 
+> This site-owned guide describes a target profile. It is not a claim that all
+> names, examples, or commands below work in the active compiler. Check the
+> [implemented-status matrix](https://hjosugi.github.io/kofun/docs/implemented-status/)
+> for the current executable boundary.
+
 ## Standard names
 
 ```text

@@ -4,6 +4,7 @@ import { docs, snapshot } from "./docs-manifest";
 
 const sections = [
   "Start here",
+  "Guides",
   "Language",
   "Compiler",
   "Contribute",
@@ -66,7 +67,7 @@ export default function DocsNav({ active }: { active?: string }) {
       </details>
 
       <div className="docs-snapshot">
-        <span>Observed main</span>
+        <span>Observed language main</span>
         <a
           href={`https://github.com/hjosugi/kofun/commit/${snapshot.commit}`}
         >
