@@ -68,12 +68,14 @@ playground boundary, and the publishing flow.
 ## Publishing
 
 `https://hjosugi.github.io/kofun/` is served from the **language**
-repository's `gh-pages` branch, and it keeps that address after the split.
-`.github/workflows/docs-hourly.yml` builds the static export here and pushes it
-there, which is a cross-repository write: it needs a PAT with contents write on
-`hjosugi/kofun`, stored as the `SITE_PUBLISH_TOKEN` secret. Project
-synchronization keeps using `PROJECTS_TOKEN`, since `GITHUB_TOKEN` cannot
-reach Projects.
+repository's `.github/workflows/pages.yml`, and it keeps that address after the
+split. That workflow checks out an exact `kofun-site` commit, builds the verified
+static export, records both source revisions, and deploys through GitHub Pages.
+Publishing a site change therefore means advancing that pinned renderer commit
+in `hjosugi/kofun` and running the Pages workflow; this repository needs no
+cross-repository publication credential. The older hourly monitor is not the
+publication authority and remains disabled. Project synchronization still uses
+`PROJECTS_TOKEN`, since `GITHUB_TOKEN` cannot reach Projects.
 
 Issues stay in [`hjosugi/kofun`](https://github.com/hjosugi/kofun/issues).
 
