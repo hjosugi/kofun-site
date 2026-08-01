@@ -14,7 +14,7 @@ carries no npm, Next.js, React, Cloudflare, or TypeScript toolchain, and its
 |---|---|
 | `app/` | Next.js App Router: landing page, `/docs` renderer, playground |
 | `site/` | build, synchronization, and export scripts with their tests |
-| `content/` | documents this repository owns: generated planning snapshots, internal policy, and public narrative guides under `content/docs/` |
+| `content/` | documents this repository owns: generated planning snapshots, internal policy, and public narrative/project documents under `content/docs/` |
 | `backlog/` | the 13,500-issue long-range catalogue, 500 per area across 27 areas |
 | `scripts/verify_backlog.kofun` | the catalogue's verifier, written in Kofun |
 | `kofun/` | submodule: the language repository, source of compiler/specification documents and the browser tour |
@@ -23,7 +23,7 @@ carries no npm, Next.js, React, Cloudflare, or TypeScript toolchain, and its
 
 This site reads the language repository and never writes source changes to it.
 Compiler and specification documents named in `app/docs/docs-manifest.ts` are
-read from the `kofun/` submodule; site-owned public guides are read from
+read from the `kofun/` submodule; site-owned public documents are read from
 `content/docs/`. `site/prepare-tour.mjs` copies the browser tour from the
 submodule. Nothing here is on the language repository's critical path.
 
@@ -38,21 +38,23 @@ Two consequences worth stating plainly:
   would prove nothing about which repository's Project an apply is about to
   write to.
 
-## The narrative documents
+## The public documents
 
-`content/ISSUE_TRIAGE.md` and the three public guides under `content/docs/`
-came from the language repository's `docs/`, where nothing resolved them: not
-`release/claims.json`, not `rfcs/index.json`, not the release-evidence pack, not
-a gate script, and—before this change—not this site's own manifest. The rest of
-`docs/` stays there and is read from the submodule, for the reason
-`kofun/docs/REPOSITORY_GUIDE.md` records.
+`content/ISSUE_TRIAGE.md` and the public documents under `content/docs/` came
+from the language repository's `docs/`. The three guides were not resolved by
+`release/claims.json`, `rfcs/index.json`, the release-evidence pack, or a gate
+script. `LANGUAGE_VISION.md`, `RFC_PROCESS.md`, and `RELEASE_EVIDENCE.md` were
+public renderer inputs rather than compiler gates; their links back to the
+language repository now name the executable sources explicitly. Repository
+contributor guides and compiler/specification documents stay with the language
+source and are rendered from the submodule.
 
-`ONE_DAY_TUTORIAL.md`, `CODING_INTERVIEW.md`, and `SCIENTIFIC_COMPUTING.md` are
-now first-class pages in `app/docs/docs-manifest.ts`. The renderer marks their
-source as `kofun-site` and keeps design guidance separate from active compiler
-claims. `content/ISSUE_TRIAGE.md` remains internal policy and is not rendered.
-Links from these guides into the language repository are absolute URLs because
-the files they name are owned elsewhere.
+All six files under `content/docs/` are first-class pages in
+`app/docs/docs-manifest.ts`. The renderer marks their source as `kofun-site`
+and keeps design/process guidance separate from active compiler claims.
+`content/ISSUE_TRIAGE.md` remains internal policy and is not rendered. Links
+from site-owned documents into the language repository are absolute URLs
+because the executable files they name are owned elsewhere.
 
 ## Getting started
 
