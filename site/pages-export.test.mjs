@@ -14,7 +14,9 @@ const required = [
   "docs/one-day-tutorial/index.html",
   "docs/coding-interview/index.html",
   "docs/scientific-computing/index.html",
+  "docs/language-vision/index.html",
   "docs/contributing/index.html",
+  "docs/rfc-process/index.html",
   "docs/release-evidence/index.html",
   "kofun-mark.svg",
   "tour/index.html",
@@ -28,15 +30,26 @@ for (const path of required) {
   );
 }
 
-const siteOwnedGuide = await readFile(
-  new URL("docs/one-day-tutorial/index.html", output),
-  "utf8",
-);
-assert.match(siteOwnedGuide, /kofun-site source/);
-assert.match(
-  siteOwnedGuide,
-  /github\.com\/hjosugi\/kofun-site\/blob\/main\/content\/docs\/ONE_DAY_TUTORIAL\.md/,
-);
+for (const [slug, source] of [
+  ["one-day-tutorial", "ONE_DAY_TUTORIAL.md"],
+  ["coding-interview", "CODING_INTERVIEW.md"],
+  ["scientific-computing", "SCIENTIFIC_COMPUTING.md"],
+  ["language-vision", "LANGUAGE_VISION.md"],
+  ["rfc-process", "RFC_PROCESS.md"],
+  ["release-evidence", "RELEASE_EVIDENCE.md"],
+]) {
+  const rendered = await readFile(
+    new URL(`docs/${slug}/index.html`, output),
+    "utf8",
+  );
+  assert.match(rendered, /kofun-site source/);
+  assert.match(
+    rendered,
+    new RegExp(
+      `github\\.com/hjosugi/kofun-site/blob/main/content/docs/${source.replace(".", "\\.")}`,
+    ),
+  );
+}
 
 const languageOwnedGuide = await readFile(
   new URL("docs/implemented-status/index.html", output),

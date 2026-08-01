@@ -26,7 +26,7 @@ The issue tracker and the generated backlog serve different purposes:
 Issues own work state; the RFC ledger owns decisions. An issue can be closed
 because the work is done, abandoned, or superseded, so its state says nothing
 durable about what the language decided. When a change alters a public semantic
-contract, [`RFC_PROCESS.md`](https://github.com/hjosugi/kofun/blob/main/docs/RFC_PROCESS.md) applies and the decision is
+contract, [`RFC_PROCESS.md`](docs/RFC_PROCESS.md) applies and the decision is
 recorded in the ledger, which the issue then references. Ordinary work needs no
 RFC.
 

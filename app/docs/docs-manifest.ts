@@ -99,7 +99,8 @@ export const docs: DocEntry[] = [
     slug: "language-vision",
     title: "Language vision",
     summary: "The intended audience, product direction, values, and explicit non-goals.",
-    source: "docs/LANGUAGE_VISION.md",
+    source: "content/docs/LANGUAGE_VISION.md",
+    repository: "site",
     section: "Language",
   },
   {
@@ -190,14 +191,16 @@ export const docs: DocEntry[] = [
     slug: "rfc-process",
     title: "RFC process",
     summary: "How public semantic decisions are proposed, reviewed, amended, and kept separate from whether anything was implemented.",
-    source: "docs/RFC_PROCESS.md",
+    source: "content/docs/RFC_PROCESS.md",
+    repository: "site",
     section: "Project",
   },
   {
     slug: "release-evidence",
     title: "Release evidence",
     summary: "The machine-checked join between published capability claims and the gates, boundaries, and reproduction commands that bound them.",
-    source: "docs/RELEASE_EVIDENCE.md",
+    source: "content/docs/RELEASE_EVIDENCE.md",
+    repository: "site",
     section: "Project",
   },
 ];

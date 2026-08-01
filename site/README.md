@@ -5,7 +5,8 @@ site. It is a standard Next.js application rooted at `app/`.
 
 The renderer supports two explicit source owners. Compiler and specification
 documents are read from `kofun/`, a submodule of the language repository;
-site-owned learning and design guides are read from `content/docs/`. `source`
+site-owned learning, design, and public process documents are read from
+`content/docs/`. `source`
 stays relative to its owning repository so GitHub links name the file where it
 is authored and reviewed. `sourceFile()` selects the local checkout path. The
 dependency runs one way only: this site reads the language repository and never

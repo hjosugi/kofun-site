@@ -9,8 +9,15 @@ assert.deepEqual(
   docs
     .filter((entry) => entry.repository === "site")
     .map((entry) => entry.slug),
-  ["one-day-tutorial", "coding-interview", "scientific-computing"],
-  "site-owned public guide manifest changed unexpectedly",
+  [
+    "one-day-tutorial",
+    "coding-interview",
+    "scientific-computing",
+    "language-vision",
+    "rfc-process",
+    "release-evidence",
+  ],
+  "site-owned public document manifest changed unexpectedly",
 );
 
 for (const entry of docs) {
