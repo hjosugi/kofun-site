@@ -151,8 +151,11 @@ jobs:
           printf '%s\n' "$SITE_PUBLISH_KEY" > ~/.ssh/publish_key
           chmod 600 ~/.ssh/publish_key
           ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+          # actions/checkout may rewrite the scp-like `git@github.com:` form
+          # back to HTTPS. The explicit ssh:// URL bypasses that rewrite so the
+          # repository-scoped deploy key is actually used by fetch and push.
           git -C kofun remote set-url origin \
-            "git@github.com:${LANGUAGE_REPOSITORY}.git"
+            "ssh://git@github.com/${LANGUAGE_REPOSITORY}.git"
       - name: Publish changed Pages tree
         if: steps.sync.outputs.publish == 'true'
         id: publish
