@@ -82,12 +82,13 @@ root-relative URLs. `npm run test:tour` runs the language repository's own tour
 gate inside the submodule, which proves the browser compiler still matches the
 native wasm32 seed byte for byte; this site publishes that application, so it
 checks what it publishes rather than trusting the copy.
-`.github/workflows/docs-hourly.yml` repeats that gate from a clean checkout,
-synchronizes selected issue and exact-commit CI evidence, and publishes changed
-output to the language repository's `gh-pages` branch, which is what
-`https://hjosugi.github.io/kofun/` serves. That cross-repository write needs a
-PAT with contents write on `hjosugi/kofun`, stored as the `SITE_PUBLISH_TOKEN`
-secret.
+The canonical deployment lives in the language repository's
+`.github/workflows/pages.yml`. It checks out an exact `kofun-site` revision and
+the verified Kofun source, runs this repository's Pages verification, records
+both commit markers, and deploys the artifact with GitHub Pages. Advance that
+pinned renderer revision when a site change is ready to publish. The older
+hourly monitor in this repository is not a publication path and remains
+disabled; no cross-repository Pages credential is required here.
 
 `npm run check:status` performs a read-only GitHub check of `main`, the full CI
 run for that exact implementation commit, and the selected
