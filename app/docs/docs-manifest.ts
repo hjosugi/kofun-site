@@ -1,28 +1,45 @@
 import statusSnapshot from "./status-snapshot.json" with { type: "json" };
 
-// Every rendered document is language-repository source, checked out here as a
-// submodule. `source` stays repository-relative so the GitHub blob links keep
-// naming the file where it is authored and reviewed; only the on-disk read is
-// prefixed. Callers must use `sourceFile` rather than joining `source` against
-// this repository's root.
+// Language-reference documents are read from the checked-out submodule while
+// site-owned guides are read from this repository. `source` always stays
+// relative to the repository where the document is authored and reviewed.
+// Callers must use `sourceFile` rather than resolving `source` directly.
 export const KOFUN_ROOT = "kofun";
 
-export function sourceFile(source: string): string {
-  return `${KOFUN_ROOT}/${source}`;
-}
+export type DocRepository = "language" | "site";
 
 export type DocEntry = {
   slug: string;
   title: string;
   summary: string;
   source: string;
+  repository?: DocRepository;
   section:
     | "Start here"
+    | "Guides"
     | "Language"
     | "Compiler"
     | "Contribute"
     | "Project";
 };
+
+export function docRepository(
+  entry: Pick<DocEntry, "repository">,
+): DocRepository {
+  return entry.repository ?? "language";
+}
+
+export function sourceFile(
+  entry: Pick<DocEntry, "repository" | "source">,
+): string {
+  return docRepository(entry) === "site"
+    ? entry.source
+    : `${KOFUN_ROOT}/${entry.source}`;
+}
+
+export function sourceKey(repository: DocRepository, source: string): string {
+  return `${repository}:${source}`;
+}
 
 export const snapshot = {
   commit: statusSnapshot.source_commit,
@@ -53,6 +70,30 @@ export const docs: DocEntry[] = [
     summary: "The concise capability matrix. Active claims require an executable gate.",
     source: "docs/MVP_IMPLEMENTED.md",
     section: "Start here",
+  },
+  {
+    slug: "one-day-tutorial",
+    title: "One-day tutorial",
+    summary: "An eight-hour learning path, with current compiler boundaries called out explicitly.",
+    source: "content/docs/ONE_DAY_TUTORIAL.md",
+    repository: "site",
+    section: "Guides",
+  },
+  {
+    slug: "coding-interview",
+    title: "Coding interview profile",
+    summary: "The intended algorithm-focused profile, including the implemented subset and planned tooling.",
+    source: "content/docs/CODING_INTERVIEW.md",
+    repository: "site",
+    section: "Guides",
+  },
+  {
+    slug: "scientific-computing",
+    title: "Scientific computing",
+    summary: "Long-range array, numerical computing, interoperability, and tooling design.",
+    source: "content/docs/SCIENTIFIC_COMPUTING.md",
+    repository: "site",
+    section: "Guides",
   },
   {
     slug: "language-vision",
@@ -162,4 +203,9 @@ export const docs: DocEntry[] = [
 ];
 
 export const docBySlug = new Map(docs.map((entry) => [entry.slug, entry]));
-export const docBySource = new Map(docs.map((entry) => [entry.source, entry]));
+export const docBySource = new Map(
+  docs.map((entry) => [
+    sourceKey(docRepository(entry), entry.source),
+    entry,
+  ]),
+);

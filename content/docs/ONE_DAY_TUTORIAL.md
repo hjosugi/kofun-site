@@ -3,6 +3,12 @@
 This tutorial aims to get you to the point where you can write a basic
 application and interview algorithms in eight hours.
 
+> This is a site-owned learning path, not an implementation-status claim.
+> Some sections describe the intended language surface and are not accepted by
+> the active compiler yet. Check the current
+> [implemented-status matrix](https://hjosugi.github.io/kofun/docs/implemented-status/)
+> before relying on an example as executable syntax.
+
 ## Hour 1: Run and values
 
 ```bash

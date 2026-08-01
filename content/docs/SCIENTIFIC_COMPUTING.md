@@ -6,6 +6,10 @@ The goal for Kofun is to keep the exploration speed of Python/NumPy and Julia
 while getting native code, static types, and memory safety for production
 deployment.
 
+> This site-owned document is long-range design guidance, not an active
+> capability claim. The current executable boundary is recorded in the
+> [implemented-status matrix](https://hjosugi.github.io/kofun/docs/implemented-status/).
+
 Target areas:
 
 - numerical simulation

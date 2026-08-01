@@ -5,8 +5,16 @@ import { docs, sourceFile } from "../app/docs/docs-manifest.ts";
 
 const markdownLink = /!?\[[^\]]*]\(([^)\s]+)(?:\s+["'][^"']*["'])?\)/g;
 
+assert.deepEqual(
+  docs
+    .filter((entry) => entry.repository === "site")
+    .map((entry) => entry.slug),
+  ["one-day-tutorial", "coding-interview", "scientific-computing"],
+  "site-owned public guide manifest changed unexpectedly",
+);
+
 for (const entry of docs) {
-  const sourcePath = path.resolve(sourceFile(entry.source));
+  const sourcePath = path.resolve(sourceFile(entry));
   await access(sourcePath);
   const source = await readFile(sourcePath, "utf8");
   const prose = source

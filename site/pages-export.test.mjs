@@ -11,6 +11,9 @@ const required = [
   "docs/index.html",
   "docs/getting-started/index.html",
   "docs/repository-guide/index.html",
+  "docs/one-day-tutorial/index.html",
+  "docs/coding-interview/index.html",
+  "docs/scientific-computing/index.html",
   "docs/contributing/index.html",
   "docs/release-evidence/index.html",
   "kofun-mark.svg",
@@ -24,6 +27,26 @@ for (const path of required) {
     `missing Pages export: ${path}`,
   );
 }
+
+const siteOwnedGuide = await readFile(
+  new URL("docs/one-day-tutorial/index.html", output),
+  "utf8",
+);
+assert.match(siteOwnedGuide, /kofun-site source/);
+assert.match(
+  siteOwnedGuide,
+  /github\.com\/hjosugi\/kofun-site\/blob\/main\/content\/docs\/ONE_DAY_TUTORIAL\.md/,
+);
+
+const languageOwnedGuide = await readFile(
+  new URL("docs/implemented-status/index.html", output),
+  "utf8",
+);
+assert.match(languageOwnedGuide, /kofun source/);
+assert.match(
+  languageOwnedGuide,
+  /github\.com\/hjosugi\/kofun\/blob\/main\/docs\/MVP_IMPLEMENTED\.md/,
+);
 
 async function files(directory) {
   const result = [];
