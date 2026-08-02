@@ -211,8 +211,6 @@ Specify not only the syntax but the experience on failure.
 - people who want Rust's safety but less lifetime ceremony in application code
 - people who want to cover scientific computing and systems integration in one
   language
-- people who want to use the same language for coding interviews and production
-  code
 - people who enjoy type-level programming and metaprogramming
 
 ## Success criteria

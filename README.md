@@ -49,7 +49,7 @@ language repository now name the executable sources explicitly. Repository
 contributor guides and compiler/specification documents stay with the language
 source and are rendered from the submodule.
 
-All six files under `content/docs/` are first-class pages in
+All five files under `content/docs/` are first-class pages in
 `app/docs/docs-manifest.ts`. The renderer marks their source as `kofun-site`
 and keeps design/process guidance separate from active compiler claims.
 `content/ISSUE_TRIAGE.md` remains internal policy and is not rendered. Links
