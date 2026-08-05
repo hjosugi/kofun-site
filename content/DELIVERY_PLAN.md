@@ -12,8 +12,8 @@ As of: `2026-08-05`
 - Maximum four agents: three writer lanes plus one review/integration lane.
 - Work in progress is capped at three implementation issues.
 - Planning umbrellas are counted but never scheduled as implementation work.
-- `22` curated issues are scheduled and
-  `36` are deferred or externally blocked.
+- `24` curated issues are scheduled and
+  `34` are deferred or externally blocked.
 
 | Metric | Count |
 |---|---:|
@@ -21,15 +21,15 @@ As of: `2026-08-05`
 | Open issues | 70 |
 | Open curated | 58 |
 | Open planning umbrellas | 11 |
-| Scheduled curated | 22 |
-| Unscheduled curated | 36 |
+| Scheduled curated | 24 |
+| Unscheduled curated | 34 |
 
 ## Forecast
 
 | Scenario | Finish | Interpretation |
 |---|---|---|
-| 4-agent capacity plan | 2026-10-13 | Deterministic lane simulation with one serial reviewer. |
-| Conservative +25% buffer | 2026-10-30 | Allows for refinement, rework, and integration variance. |
+| 4-agent capacity plan | 2026-10-15 | Deterministic lane simulation with one serial reviewer. |
+| Conservative +25% buffer | 2026-11-03 | Allows for refinement, rework, and integration variance. |
 | Observed completion pace, intake frozen | 2026-08-07 | Optimistic extrapolation; it freezes intake and may include retrospective tracker closure. |
 | Observed net issue burn | — | No finish date: curated intake equals or exceeds completed work in the observation window. |
 
@@ -76,42 +76,44 @@ lane finishes integration.
 |---|---|---|---|---|---|---|---|---|---|
 | [#622](https://github.com/hjosugi/kofun/issues/622) | `writer-a` | ready | P0 | M | 2026-08-05 | 2026-08-10 | 2026-08-11 | medium | Self-host compiler driver: args, file I/O, and compiling S to deterministic C11 |
 | [#725](https://github.com/hjosugi/kofun/issues/725) | `writer-b` | needs-detail | P2 | L | 2026-08-05 | 2026-08-18 | 2026-08-20 | low | Decimal slice 6: state scale guarantees truthfully now, and add Fixed[scale] when const generics exist |
-| [#880](https://github.com/hjosugi/kofun/issues/880) | `writer-c` | ready | P1 | M | 2026-08-05 | 2026-08-10 | 2026-08-12 | medium | Call arguments v1 slice 1: parse labels and canonical trailing lambdas |
-| [#27](https://github.com/hjosugi/kofun/issues/27) | `writer-c` | needs-decision | P1 | M | 2026-08-11 | 2026-08-19 | 2026-08-24 | low | Sample: end-to-end JSON API service |
+| [#955](https://github.com/hjosugi/kofun/issues/955) | `writer-c` | in-progress | P1 | S | 2026-08-05 | 2026-08-06 | 2026-08-07 | medium | modules: spec/grammar.ebnf admits a top-level `let` that Stage 2 refuses with E2S02 |
+| [#1008](https://github.com/hjosugi/kofun/issues/1008) | `writer-c` | in-progress | P1 | M | 2026-08-07 | 2026-08-12 | 2026-08-13 | medium | Stage 2: execute immutable Int module constants after authority decision |
 | [#271](https://github.com/hjosugi/kofun/issues/271) | `writer-a` | needs-decision | P0 | M | 2026-08-12 | 2026-08-20 | 2026-08-21 | low | Bootstrap: produce C1/A1 and self-compile S into C2/A2 |
-| [#555](https://github.com/hjosugi/kofun/issues/555) | `writer-c` | needs-decision | P1 | M | 2026-08-20 | 2026-08-28 | 2026-08-31 | low | Scoped parallelism v1: specify spawn/join ownership semantics and executable model |
-| [#902](https://github.com/hjosugi/kofun/issues/902) | `writer-b` | needs-decision | P1 | M | 2026-08-21 | 2026-08-31 | 2026-09-01 | low | bindgen-c: enforce a mechanical raw-binding import boundary |
+| [#880](https://github.com/hjosugi/kofun/issues/880) | `writer-c` | ready | P1 | M | 2026-08-13 | 2026-08-18 | 2026-08-24 | medium | Call arguments v1 slice 1: parse labels and canonical trailing lambdas |
+| [#27](https://github.com/hjosugi/kofun/issues/27) | `writer-c` | needs-decision | P1 | M | 2026-08-19 | 2026-08-27 | 2026-08-31 | low | Sample: end-to-end JSON API service |
+| [#555](https://github.com/hjosugi/kofun/issues/555) | `writer-b` | needs-decision | P1 | M | 2026-08-21 | 2026-08-31 | 2026-09-01 | low | Scoped parallelism v1: specify spawn/join ownership semantics and executable model |
 | [#272](https://github.com/hjosugi/kofun/issues/272) | `writer-a` | blocked | P0 | M | 2026-08-24 | 2026-08-27 | 2026-08-28 | conditional | Bootstrap fixed point: produce C3/A3, compare three generations, close B4/B5 |
+| [#902](https://github.com/hjosugi/kofun/issues/902) | `writer-c` | needs-decision | P1 | M | 2026-08-28 | 2026-09-07 | 2026-09-08 | low | bindgen-c: enforce a mechanical raw-binding import boundary |
 | [#274](https://github.com/hjosugi/kofun/issues/274) | `writer-a` | blocked | P1 | M | 2026-08-31 | 2026-09-03 | 2026-09-04 | conditional | Reproducible bootstrap B6: independent clean builder reproduces the fixed point |
-| [#988](https://github.com/hjosugi/kofun/issues/988) | `writer-c` | needs-decision | P1 | S | 2026-08-31 | 2026-09-04 | 2026-09-07 | low | RFC: choose the derive v1 expansion authority and inspection contract |
-| [#637](https://github.com/hjosugi/kofun/issues/637) | `writer-b` | needs-detail | P1 | M | 2026-09-01 | 2026-09-08 | 2026-09-09 | low | Discovery query v1: project inferred types and callable operations from semantic facts |
-| [#710](https://github.com/hjosugi/kofun/issues/710) | `writer-a` | needs-detail | P1 | L | 2026-09-07 | 2026-09-18 | 2026-09-22 | low | Compiler-native Decimal: implement the accepted language design across all backends |
-| [#281](https://github.com/hjosugi/kofun/issues/281) | `writer-c` | unclassified | P1 | M | 2026-09-07 | 2026-09-10 | 2026-09-11 | medium | Position paper: what replacing C and Rust actually requires |
-| [#645](https://github.com/hjosugi/kofun/issues/645) | `writer-b` | ready | P2 | M | 2026-09-09 | 2026-09-14 | 2026-09-15 | medium | Date/time core: Gregorian values, checked arithmetic, and strict RFC 3339 |
-| [#1033](https://github.com/hjosugi/kofun/issues/1033) | `writer-c` | ready | P2 | M | 2026-09-11 | 2026-09-16 | 2026-09-17 | medium | LSP visibility: filter completion and navigation by caller context |
-| [#1035](https://github.com/hjosugi/kofun/issues/1035) | `writer-b` | ready | P2 | S | 2026-09-15 | 2026-09-16 | 2026-09-18 | medium | Visibility fuzz: bound malformed identities, re-export chains, and stale artifacts |
-| [#784](https://github.com/hjosugi/kofun/issues/784) | `writer-b` | needs-decision | P2 | M | 2026-09-17 | 2026-09-25 | 2026-09-28 | low | ownership: an affine handle whose owned state cannot be duplicated (#644) |
-| [#943](https://github.com/hjosugi/kofun/issues/943) | `writer-c` | needs-decision | P2 | S | 2026-09-17 | 2026-09-23 | 2026-09-24 | low | Lambda spelling drift: Stage 2 accepts `(a, b) => e` and `x => e`, the grammar and SYNTAX.md describe neither |
-| [#975](https://github.com/hjosugi/kofun/issues/975) | `writer-a` | needs-decision | P2 | S | 2026-09-21 | 2026-09-25 | 2026-09-29 | low | backlog: decide whether a planning umbrella waiting on children is `blocked` |
-| [#995](https://github.com/hjosugi/kofun/issues/995) | `writer-c` | needs-decision | P2 | S | 2026-09-24 | 2026-09-30 | 2026-10-01 | low | Trait member override v1: inherited and default member collision contract |
-| [#584](https://github.com/hjosugi/kofun/issues/584) | `writer-a` | needs-detail | P2 | M | 2026-09-28 | 2026-10-05 | 2026-10-06 | low | Visibility tooling: prevent macro, LSP, and sidecar access bypasses |
-| [#868](https://github.com/hjosugi/kofun/issues/868) | `writer-b` | needs-detail | P2 | L | 2026-09-28 | 2026-10-09 | 2026-10-13 | low | Stage 2 C11 aggregate bridge: execute records with List[Int] and Text |
+| [#988](https://github.com/hjosugi/kofun/issues/988) | `writer-b` | needs-decision | P1 | S | 2026-09-01 | 2026-09-07 | 2026-09-09 | low | RFC: choose the derive v1 expansion authority and inspection contract |
+| [#637](https://github.com/hjosugi/kofun/issues/637) | `writer-a` | needs-detail | P1 | M | 2026-09-07 | 2026-09-14 | 2026-09-15 | low | Discovery query v1: project inferred types and callable operations from semantic facts |
+| [#710](https://github.com/hjosugi/kofun/issues/710) | `writer-b` | needs-detail | P1 | L | 2026-09-08 | 2026-09-21 | 2026-09-23 | low | Compiler-native Decimal: implement the accepted language design across all backends |
+| [#281](https://github.com/hjosugi/kofun/issues/281) | `writer-c` | unclassified | P1 | M | 2026-09-08 | 2026-09-11 | 2026-09-14 | medium | Position paper: what replacing C and Rust actually requires |
+| [#645](https://github.com/hjosugi/kofun/issues/645) | `writer-c` | ready | P2 | M | 2026-09-14 | 2026-09-17 | 2026-09-18 | medium | Date/time core: Gregorian values, checked arithmetic, and strict RFC 3339 |
+| [#1033](https://github.com/hjosugi/kofun/issues/1033) | `writer-a` | ready | P2 | M | 2026-09-15 | 2026-09-18 | 2026-09-21 | medium | LSP visibility: filter completion and navigation by caller context |
+| [#1035](https://github.com/hjosugi/kofun/issues/1035) | `writer-c` | ready | P2 | S | 2026-09-18 | 2026-09-21 | 2026-09-24 | medium | Visibility fuzz: bound malformed identities, re-export chains, and stale artifacts |
+| [#784](https://github.com/hjosugi/kofun/issues/784) | `writer-a` | needs-decision | P2 | M | 2026-09-21 | 2026-09-29 | 2026-09-30 | low | ownership: an affine handle whose owned state cannot be duplicated (#644) |
+| [#943](https://github.com/hjosugi/kofun/issues/943) | `writer-b` | needs-decision | P2 | S | 2026-09-22 | 2026-09-28 | 2026-09-29 | low | Lambda spelling drift: Stage 2 accepts `(a, b) => e` and `x => e`, the grammar and SYNTAX.md describe neither |
+| [#975](https://github.com/hjosugi/kofun/issues/975) | `writer-c` | needs-decision | P2 | S | 2026-09-22 | 2026-09-28 | 2026-10-01 | low | backlog: decide whether a planning umbrella waiting on children is `blocked` |
+| [#995](https://github.com/hjosugi/kofun/issues/995) | `writer-b` | needs-decision | P2 | S | 2026-09-29 | 2026-10-05 | 2026-10-06 | low | Trait member override v1: inherited and default member collision contract |
+| [#584](https://github.com/hjosugi/kofun/issues/584) | `writer-c` | needs-detail | P2 | M | 2026-09-29 | 2026-10-06 | 2026-10-07 | low | Visibility tooling: prevent macro, LSP, and sidecar access bypasses |
+| [#868](https://github.com/hjosugi/kofun/issues/868) | `writer-a` | needs-detail | P2 | L | 2026-09-30 | 2026-10-13 | 2026-10-15 | low | Stage 2 C11 aggregate bridge: execute records with List[Int] and Text |
 
 ## Weekly calendar
 
 | Week of | Active issues | Delivered | Writer load |
 |---|---|---|---:|
-| 2026-08-03 | #622, #725, #880 | — | 9/15 |
-| 2026-08-10 | #27, #271, #622, #725, #880 | #622, #880 | 14/15 |
-| 2026-08-17 | #27, #271, #555, #725, #902 | #271, #725 | 12/15 |
-| 2026-08-24 | #27, #272, #555, #902 | #27, #272 | 14/15 |
-| 2026-08-31 | #274, #555, #637, #902, #988 | #274, #555, #902 | 14/15 |
-| 2026-09-07 | #281, #637, #645, #710, #988, #1033 | #281, #637, #988 | 15/15 |
-| 2026-09-14 | #645, #710, #784, #943, #1033, #1035 | #645, #1033, #1035 | 15/15 |
-| 2026-09-21 | #710, #784, #943, #975, #995 | #710, #943 | 15/15 |
-| 2026-09-28 | #584, #784, #868, #975, #995 | #784, #975, #995 | 13/15 |
-| 2026-10-05 | #584, #868 | #584 | 6/15 |
-| 2026-10-12 | #868 | #868 | 0/15 |
+| 2026-08-03 | #622, #725, #955, #1008 | #955 | 9/15 |
+| 2026-08-10 | #271, #622, #725, #880, #1008 | #622, #1008 | 14/15 |
+| 2026-08-17 | #27, #271, #555, #725, #880 | #271, #725 | 12/15 |
+| 2026-08-24 | #27, #272, #555, #880, #902 | #272, #880 | 14/15 |
+| 2026-08-31 | #27, #274, #555, #902, #988 | #27, #274, #555 | 14/15 |
+| 2026-09-07 | #281, #637, #710, #902, #988 | #902, #988 | 15/15 |
+| 2026-09-14 | #281, #637, #645, #710, #1033, #1035 | #281, #637, #645 | 15/15 |
+| 2026-09-21 | #710, #784, #943, #975, #1033, #1035 | #710, #1033, #1035 | 15/15 |
+| 2026-09-28 | #584, #784, #868, #943, #975, #995 | #784, #943, #975 | 15/15 |
+| 2026-10-05 | #584, #868, #995 | #584, #995 | 8/15 |
+| 2026-10-12 | #868 | #868 | 2/15 |
 
 ## Not scheduled
 
@@ -153,8 +155,6 @@ has an external blocker outside the represented serial chains.
 | [#930](https://github.com/hjosugi/kofun/issues/930) | blocked | blocked without a dependency represented by a scheduled chain |
 | [#942](https://github.com/hjosugi/kofun/issues/942) | blocked | blocked without a dependency represented by a scheduled chain |
 | [#946](https://github.com/hjosugi/kofun/issues/946) | blocked | blocked without a dependency represented by a scheduled chain |
-| [#955](https://github.com/hjosugi/kofun/issues/955) | blocked | blocked without a dependency represented by a scheduled chain |
-| [#1008](https://github.com/hjosugi/kofun/issues/1008) | blocked | blocked without a dependency represented by a scheduled chain |
 | [#1032](https://github.com/hjosugi/kofun/issues/1032) | blocked | blocked without a dependency represented by a scheduled chain |
 
 ## Assumptions
