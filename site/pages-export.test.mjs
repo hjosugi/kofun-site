@@ -56,7 +56,7 @@ const languageOwnedGuide = await readFile(
 assert.match(languageOwnedGuide, /kofun source/);
 assert.match(
   languageOwnedGuide,
-  /github\.com\/hjosugi\/kofun\/blob\/main\/docs\/MVP_IMPLEMENTED\.md/,
+  /github\.com\/kofun-lang\/kofun\/blob\/main\/docs\/MVP_IMPLEMENTED\.md/,
 );
 
 async function files(directory) {

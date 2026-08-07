@@ -2,7 +2,7 @@ import Link from "next/link";
 import KofunMark from "./kofun-mark";
 import Playground from "./playground";
 
-const githubUrl = "https://github.com/hjosugi/kofun";
+const githubUrl = "https://github.com/kofun-lang/kofun";
 const siteBasePath = process.env.KOFUN_BASE_PATH ?? "";
 
 function ArrowIcon() {

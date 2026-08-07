@@ -1,6 +1,6 @@
 # kofun-site
 
-Everything about the [Kofun language](https://github.com/hjosugi/kofun) that is
+Everything about the [Kofun language](https://github.com/kofun-lang/kofun) that is
 not the language implementation: the official site, the documentation renderer,
 the delivery-planning snapshots, and the long-range issue catalogue.
 
@@ -69,17 +69,17 @@ playground boundary, and the publishing flow.
 
 ## Publishing
 
-`https://hjosugi.github.io/kofun/` is served from the **language**
+`https://kofun-lang.github.io/kofun/` is served from the **language**
 repository's `.github/workflows/pages.yml`, and it keeps that address after the
 split. That workflow checks out an exact `kofun-site` commit, builds the verified
 static export, records both source revisions, and deploys through GitHub Pages.
 Publishing a site change therefore means advancing that pinned renderer commit
-in `hjosugi/kofun` and running the Pages workflow; this repository needs no
+in `kofun-lang/kofun` and running the Pages workflow; this repository needs no
 cross-repository publication credential. The older hourly monitor is not the
 publication authority and remains disabled. Project synchronization still uses
 `PROJECTS_TOKEN`, since `GITHUB_TOKEN` cannot reach Projects.
 
-Issues stay in [`hjosugi/kofun`](https://github.com/hjosugi/kofun/issues).
+Issues stay in [`kofun-lang/kofun`](https://github.com/kofun-lang/kofun/issues).
 
 ## Verifying the backlog
 
