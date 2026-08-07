@@ -23,7 +23,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  LANGUAGE_REPOSITORY: hjosugi/kofun
+  LANGUAGE_REPOSITORY: kofun-lang/kofun
 
 jobs:
   synchronize:

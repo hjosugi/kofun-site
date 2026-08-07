@@ -24,13 +24,13 @@ const repositories: Record<
 > = {
   language: {
     blob: "https://github.com/kofun-lang/kofun/blob/main",
-    raw: "https://raw.githubusercontent.com/hjosugi/kofun/main",
+    raw: "https://raw.githubusercontent.com/kofun-lang/kofun/main",
     tree: "https://github.com/kofun-lang/kofun/tree/main",
     label: "kofun source",
   },
   site: {
     blob: "https://github.com/kofun-lang/kofun-site/blob/main",
-    raw: "https://raw.githubusercontent.com/hjosugi/kofun-site/main",
+    raw: "https://raw.githubusercontent.com/kofun-lang/kofun-site/main",
     tree: "https://github.com/kofun-lang/kofun-site/tree/main",
     label: "kofun-site source",
   },

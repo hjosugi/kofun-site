@@ -206,7 +206,7 @@ keep sections that are not applicable and explain why.
 - State: needs-detail
 - Tracker role: curated/planning
 - Kind: bug/implementation/spec-design/research/test-quality/documentation/maintenance/planning
-- Area: one primary area from the backlog README in hjosugi/kofun-site
+- Area: one primary area from the backlog README in kofun-lang/kofun-site
 - Priority: P0/P1/P2/P3
 - Milestone: M0-spec/M1-bootstrap/M2-alpha/M3-beta/M4-1.0
 - Size: S/M/L

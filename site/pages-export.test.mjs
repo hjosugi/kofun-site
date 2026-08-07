@@ -44,7 +44,7 @@ for (const [slug, source] of [
   assert.match(
     rendered,
     new RegExp(
-      `github\\.com/hjosugi/kofun-site/blob/main/content/docs/${source.replace(".", "\\.")}`,
+      `github\\.com/kofun-lang/kofun-site/blob/main/content/docs/${source.replace(".", "\\.")}`,
     ),
   );
 }
