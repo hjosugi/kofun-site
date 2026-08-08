@@ -95,29 +95,6 @@ export default function Home() {
           </div>
         </div>
 
-        <div
-          className="hero-art"
-          aria-label="Kofun language mark"
-          role="img"
-        >
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <div className="hero-mark">
-            <KofunMark />
-          </div>
-          <div className="art-label label-one">
-            <span>read</span>
-            non-owning view
-          </div>
-          <div className="art-label label-two">
-            <span>edit</span>
-            exclusive view
-          </div>
-          <div className="art-label label-three">
-            <span>take</span>
-            ownership transfer
-          </div>
-        </div>
       </section>
 
       <div className="signal-strip" aria-label="Current Kofun checkpoints">
